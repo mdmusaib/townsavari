@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Townsavari — Admin Dashboard</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; background: #f4f6f8; margin: 0; padding: 24px; color: #1a1a1a; }
+    .card { max-width: 560px; margin: 0 auto; background: #fff; border-radius: 12px; padding: 28px; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
+    h1 { font-size: 20px; margin: 0 0 4px; }
+    p.sub { color: #666; font-size: 13px; margin: 0 0 20px; }
+    label { display: block; font-size: 13px; font-weight: 600; margin: 14px 0 4px; }
+    input { width: 100%; padding: 10px 12px; font-size: 15px; border: 1px solid #ccc; border-radius: 8px; }
+    input:focus { outline: none; border-color: #1a73e8; box-shadow: 0 0 0 2px rgba(26,115,232,.15); }
+    .hint { font-size: 12px; color: #888; margin-top: 2px; }
+    button { margin-top: 22px; width: 100%; padding: 12px; font-size: 15px; font-weight: 600; color: #fff; background: #1a73e8; border: none; border-radius: 8px; cursor: pointer; }
+    button:hover { background: #1558b0; }
+    button:disabled { background: #9bbde8; cursor: default; }
+    #status { margin-top: 14px; font-size: 13px; min-height: 20px; }
+    #status.ok { color: #137333; }
+    #status.err { color: #b3261e; }
+    #source { font-size: 12px; color: #888; margin-top: 6px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🛵 Townsavari Admin</h1>
+    <p class="sub">Fare settings &amp; commission ledger config (Firestore: <code>systemConfig/global</code>)</p>
+
+    <form id="configForm">
+      <label for="baseFare">Base fare (₹)</label>
+      <input id="baseFare" name="baseFare" type="number" min="0" step="0.01" required />
+      <div class="hint">Flat starting fare for every ride.</div>
+
+      <label for="baseDistanceKm">Base distance (km)</label>
+      <input id="baseDistanceKm" name="baseDistanceKm" type="number" min="0" step="0.1" required />
+      <div class="hint">Distance covered by the base fare before per-km charges apply.</div>
+
+      <label for="ratePerKm">Rate per kilometre (₹/km)</label>
+      <input id="ratePerKm" name="ratePerKm" type="number" min="0" step="0.01" required />
+
+      <label for="platformCommissionPercent">Commission percentage (%)</label>
+      <input id="platformCommissionPercent" name="platformCommissionPercent" type="number" min="0" max="100" step="0.1" required />
+      <div class="hint">Platform cut added to driver commissionOwed per ride.</div>
+
+      <label for="maxCommissionOwed">Maximum unpaid commission (₹)</label>
+      <input id="maxCommissionOwed" name="maxCommissionOwed" type="number" min="0" step="1" required />
+      <div class="hint">Drivers above this balance are blocked from accepting rides.</div>
+
+      <button type="submit" id="saveBtn">Save settings</button>
+    </form>
+
+    <div id="status"></div>
+    <div id="source"></div>
+  </div>
+
+  <script src="/admin.js"></script>
+</body>
+</html>
