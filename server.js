@@ -8,6 +8,7 @@ const googleMapsService = require('./services/googleMapsService');
 const adminController = require('./controllers/adminController');
 const rideController = require('./controllers/rideController');
 const driverController = require('./controllers/driverController');
+const placesController = require('./controllers/placesController');
 const { gpsValidator } = require('./middlewares/gpsValidator');
 const { commissionGuard } = require('./middlewares/commissionGuard');
 const errorHandler = require('./middlewares/errorHandler');
@@ -75,6 +76,11 @@ app.post('/api/v1/rides/complete', rideController.completeRide);
 
 // Task 7 — FCM dev test route (DEVELOPMENT ONLY — remove before production)
 app.post('/api/v1/dev/notify-test', rideController.devNotifyTest);
+
+// Places Autocomplete, Place Details, and Reverse Geocoding (Places API New)
+app.post('/api/v1/places/autocomplete', placesController.autocomplete);
+app.get('/api/v1/places/details/:placeId', placesController.placeDetails);
+app.post('/api/v1/places/reverse-geocode', placesController.reverseGeocode);
 
 // Task 6 — Driver GPS Polling & Anti-Spoofing (120 km/h guard + geohash)
 app.post(
