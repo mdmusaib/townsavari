@@ -9,6 +9,7 @@ const adminController = require('./controllers/adminController');
 const rideController = require('./controllers/rideController');
 const driverController = require('./controllers/driverController');
 const placesController = require('./controllers/placesController');
+const userController = require('./controllers/userController');
 const { gpsValidator } = require('./middlewares/gpsValidator');
 const { commissionGuard } = require('./middlewares/commissionGuard');
 const errorHandler = require('./middlewares/errorHandler');
@@ -66,6 +67,29 @@ app.post('/api/v1/rides/estimate', rideController.estimateRide);
 // Task 5 — Atomic Ride Acceptance (409 if already taken)
 // Task 9 — commissionGuard blocks over-limit drivers with 403.
 app.post('/api/v1/rides/accept', commissionGuard, rideController.acceptRide);
+
+// Ride lifecycle: reject (driver declines), arrived, start, cancel, settlement.
+app.post('/api/v1/rides/reject', rideController.rejectRide);
+app.post('/api/v1/rides/arrived', rideController.arrivedRide);
+app.post('/api/v1/rides/start', rideController.startRide);
+app.post('/api/v1/rides/cancel', rideController.cancelRide);
+app.post('/api/v1/rides/confirm-payment', rideController.confirmPayment);
+app.post('/api/v1/rides/rate', rideController.rateRide);
+
+// Single-ride status poll used by rider + driver apps.
+app.get('/api/v1/rides/:rideId', rideController.getRide);
+
+// Rider history (index-free, filtered in memory).
+app.get('/api/v1/rider/history', rideController.riderHistory);
+
+// Driver online status, earnings stats, and public profile.
+app.post('/api/v1/driver/status', driverController.setStatus);
+app.get('/api/v1/driver/stats', driverController.getStats);
+app.get('/api/v1/drivers/:driverId', driverController.getDriverProfile);
+
+// FCM device-token registration (agent.md Task 7).
+app.post('/api/v1/users/fcm-token', userController.saveFcmToken);
+app.delete('/api/v1/users/fcm-token', userController.clearFcmToken);
 
 // Task 9 — Available rides listing, guarded by commission check.
 app.get('/api/v1/driver/available-rides', commissionGuard, driverController.listAvailableRides);
